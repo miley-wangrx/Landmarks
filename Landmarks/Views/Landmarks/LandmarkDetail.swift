@@ -8,7 +8,13 @@
 import SwiftUI
 
 struct LandmarkDetail: View {
+    @EnvironmentObject var modelData: ModelData
     var landmark: Landmark
+    
+    var landmarkIndex: Int {
+            // find the idx of the current Landmark we are editing
+            modelData.landmarks.firstIndex(where: { $0.id == landmark.id })!
+        }
     
     var body: some View {
         VStack {
@@ -23,7 +29,8 @@ struct LandmarkDetail: View {
             VStack(alignment: .leading) {
                 Text(landmark.name)
                     .font(.title)
-                
+                FavoriteButton(isSet: $modelData.landmarks[landmarkIndex].isFavorite)
+                /** Use landmarkIndex with the modelData object to ensure that the button updates the isFavorite property of the landmark stored in your model object. */
                 HStack {
                     Text(landmark.park)
                     Spacer()
@@ -47,6 +54,7 @@ struct LandmarkDetail: View {
 
 struct LandmarkDetail_Previews: PreviewProvider {
     static var previews: some View {
-        LandmarkDetail(landmark: landmarks[0])
+        LandmarkDetail(landmark: ModelData().landmarks[0])
+        /** ModelData is defined as an @EnvironmentObject in this view's father view, then we can call ModelData() in this view. There's no need to declear in the beginning of the code of this view. */
     }
 }
